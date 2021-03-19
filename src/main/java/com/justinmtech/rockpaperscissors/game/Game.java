@@ -18,18 +18,43 @@ public class Game {
         this.bet = bet;
         this.challenger = challenger;
         this.opponent = opponent;
-        startGame();
     }
 
-    private void startGame() {
+    public Game(Player challenger, Player opponent) {
+        rounds = 0;
+        over = false;
+        this.bet = bet;
+        this.challenger = challenger;
+        this.opponent = opponent;
+    }
+
+    public Game(Player challenger, double bet) {
+        rounds = 0;
+        over = false;
+        this.bet = bet;
+        this.challenger = challenger;
+    }
+
+    public Game(Player challenger) {
+        rounds = 0;
+        over = false;
+        this.challenger = challenger;
+    }
+
+    public void startGame() {
     while (!over) {
         //listen
     }
 
     }
 
+    private void endGame() {
+
+    }
+
     private void listenCommands() {
         //listen to commands
+
     }
 
 

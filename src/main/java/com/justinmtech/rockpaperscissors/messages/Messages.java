@@ -50,23 +50,4 @@ public class Messages {
     public void setOpponent(Player opponent) {
         this.opponent = opponent;
     }
-
-
-
-    public String getChallengerName() {
-        return challengerName;
-    }
-
-    public void setChallengerName(String challengerName) {
-        this.challengerName = challengerName;
-    }
-
-    public String getOpponentName() {
-        return opponentName;
-    }
-
-    public void setOpponentName(String opponentName) {
-        this.opponentName = opponentName;
-    }
-
 }
