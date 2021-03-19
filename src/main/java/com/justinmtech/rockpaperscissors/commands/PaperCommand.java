@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-//TODO handle the /rock command
-public class RockCommand implements CommandExecutor {
+//TODO handle the /paper command
+public class PaperCommand implements CommandExecutor {
     private RockPaperScissors rps;
     private Player player;
     private boolean commandSuccessful;
