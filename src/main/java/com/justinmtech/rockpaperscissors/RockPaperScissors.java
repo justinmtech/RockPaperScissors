@@ -9,6 +9,16 @@ import java.util.HashMap;
 public final class RockPaperScissors extends JavaPlugin {
     private HashMap<Player, Player> invites = new HashMap<>();
 
+    public HashMap<Player, Player> getActiveGames() {
+        return activeGames;
+    }
+
+    public void setActiveGames(HashMap<Player, Player> activeGames) {
+        this.activeGames = activeGames;
+    }
+
+    private HashMap<Player, Player> activeGames = new HashMap<>();
+
     @Override
     public void onEnable() {
         // Plugin startup logic
