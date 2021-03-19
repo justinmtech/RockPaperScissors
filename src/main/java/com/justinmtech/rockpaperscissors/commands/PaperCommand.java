@@ -8,18 +8,19 @@ import org.bukkit.entity.Player;
 
 //TODO handle the /paper command
 public class PaperCommand implements CommandExecutor {
-    private RockPaperScissors rps;
-    private Player player;
+    private static RockPaperScissors plugin;
     private boolean commandSuccessful;
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
-            player = (Player) commandSender;
-            if (rps.getActiveGames().get(player) != null) {
+            Player player = (Player) commandSender;
+            if (plugin.getActiveGames().get(player) != null) {
                 commandSuccessful = true;
+                player.sendMessage("You chose paper!");
             } else {
                 commandSuccessful = false;
+                player.sendMessage("Command failed! Are you in a match?");
             }
         }
         return commandSuccessful;

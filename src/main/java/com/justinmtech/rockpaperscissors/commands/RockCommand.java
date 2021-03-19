@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 //TODO handle the /rock command
 public class RockCommand implements CommandExecutor {
-    private RockPaperScissors rps;
+    private static RockPaperScissors plugin;
     private Player player;
     private boolean commandSuccessful;
 
@@ -16,10 +16,12 @@ public class RockCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
             player = (Player) commandSender;
-            if (rps.getActiveGames().get(player) != null) {
+            if (plugin.getActiveGames().get(player) != null) {
                 commandSuccessful = true;
+                player.sendMessage("You chose rock!");
             } else {
                 commandSuccessful = false;
+                player.sendMessage("Command failed! Are you in a match?");
             }
         }
         return commandSuccessful;

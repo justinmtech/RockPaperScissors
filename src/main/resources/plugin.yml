@@ -8,5 +8,5 @@ website: https://github.com/justinmtech
 commands:
   rps:
     description: Main command
-    usage: /rps [accept|<player>]
+    usage: /rps [accept|<player>] [betAmount]
 
