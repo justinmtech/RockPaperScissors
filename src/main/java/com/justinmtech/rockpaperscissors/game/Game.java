@@ -2,8 +2,6 @@ package com.justinmtech.rockpaperscissors.game;
 
 import org.bukkit.entity.Player;
 
-import java.util.EventListener;
-
 public class Game {
     private int rounds;
     private boolean over;
@@ -47,8 +45,18 @@ public class Game {
 
     public void startGame() {
         while (!over) {
-            //listen
+            //get player input
+            //set input fields
+            //determine round winner
+            determineWinner();
 
+        }
+        gameOver();
+    }
+
+    public boolean checkIfOver() {
+        if (challengerScore == 3 || opponenntScore == 3) {
+            over = true;
         }
     }
 
@@ -77,8 +85,30 @@ public class Game {
         }
     }
 
-    private void endGame() {
+    private void gameOver() {
+        if (challengerScore == 3) {
+            challenger.sendMessage("You won!");
+            opponent.sendMessage("You lost!");
+        } else {
+            challenger.sendMessage("You lost!");
+            opponent.sendMessage("You won!");
 
+        }
+    }
+
+    private void payBet(Player winner) {
+        if (bet > 0) {
+            double payout = bet * 2;
+            winner.sendMessage("You won " + payout + "!");
+            //TODO add vault dependency and give money to winner
+        }
+    }
+
+    private void collectBet() {
+        if (bet > 0) {
+            //deduct bet amount from challenger
+            //deduct bet amount fro opponent
+        }
     }
 
     private void listenCommands() {
