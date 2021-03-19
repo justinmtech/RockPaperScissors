@@ -10,7 +10,11 @@ public class Game {
     private boolean hasBet;
     private double bet;
     private Player challenger;
+    private String challengerInput;
+    private int challengerScore;
     private Player opponent;
+    private String opponentInput;
+    private int opponenntScore;
 
     public Game(Player challenger, Player opponent, double bet) {
         rounds = 0;
@@ -42,10 +46,35 @@ public class Game {
     }
 
     public void startGame() {
-    while (!over) {
-        //listen
+        while (!over) {
+            //listen
+
+        }
     }
 
+    private void determineWinner() {
+        if (challengerInput == opponentInput) {
+            challenger.sendMessage("Tie!");
+            opponent.sendMessage("Tie!");
+        } else if (challengerInput.equalsIgnoreCase("paper")) {
+                if (opponentInput.equalsIgnoreCase("rock")) {
+                    challengerScore++;
+                } else if (opponentInput.equalsIgnoreCase("scissors")) {
+                    opponenntScore++;
+                }
+        } else if (challengerInput.equalsIgnoreCase("rock")) {
+            if (opponentInput.equalsIgnoreCase("paper")) {
+                opponenntScore++;
+            } else if (opponentInput.equalsIgnoreCase("scissors")) {
+                challengerScore++;
+            }
+        } else if (challengerInput.equalsIgnoreCase("scissors")) {
+            if (opponentInput.equalsIgnoreCase("rock")) {
+                opponenntScore++;
+            } else if (opponentInput.equalsIgnoreCase("paper")) {
+                challengerScore++;
+            }
+        }
     }
 
     private void endGame() {

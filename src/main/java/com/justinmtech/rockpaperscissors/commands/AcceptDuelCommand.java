@@ -1,5 +1,6 @@
 package com.justinmtech.rockpaperscissors.commands;
 
+import com.justinmtech.rockpaperscissors.RockPaperScissors;
 import com.justinmtech.rockpaperscissors.game.Game;
 import com.justinmtech.rockpaperscissors.game.Invites;
 import org.bukkit.command.Command;
@@ -8,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AcceptDuelCommand implements CommandExecutor {
-    private Invites invites;
+    private RockPaperScissors rps;
     private Player invited;
     private Player inviter;
 
@@ -16,8 +17,7 @@ public class AcceptDuelCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             invited = (Player) sender;
-            if (invites.getPendingMatches().get(invited) != null) {
-                inviter = invites.getPendingMatches().get(invited);
+            if (rps.getInvites().get(invited) != null) {
                 new Game(inviter, invited);
             } else {
                 invited.sendMessage("You do not have any pending matches!");
