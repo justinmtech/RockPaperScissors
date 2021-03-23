@@ -1,4 +1,4 @@
-package com.justinmtech.rockpaperscissors.messages;
+package com.justinmtech.rockpaperscissors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

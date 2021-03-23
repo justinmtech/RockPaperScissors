@@ -1,5 +1,6 @@
-package com.justinmtech.rockpaperscissors.game;
+package com.justinmtech.rockpaperscissors;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Game {
@@ -8,6 +9,23 @@ public class Game {
     private boolean hasBet;
     private double bet;
     private Player challenger;
+
+    public String getChallengerInput() {
+        return challengerInput;
+    }
+
+    public void setChallengerInput(String challengerInput) {
+        this.challengerInput = challengerInput;
+    }
+
+    public String getOpponentInput() {
+        return opponentInput;
+    }
+
+    public void setOpponentInput(String opponentInput) {
+        this.opponentInput = opponentInput;
+    }
+
     private String challengerInput;
     private int challengerScore;
     private Player opponent;
@@ -20,6 +38,7 @@ public class Game {
         this.bet = bet;
         this.challenger = challenger;
         this.opponent = opponent;
+        startGame();
     }
 
     public Game(Player challenger, Player opponent) {
@@ -28,6 +47,7 @@ public class Game {
         this.bet = bet;
         this.challenger = challenger;
         this.opponent = opponent;
+        startGame();
     }
 
     public Game(Player challenger, double bet) {
@@ -35,29 +55,35 @@ public class Game {
         over = false;
         this.bet = bet;
         this.challenger = challenger;
+        startGame();
     }
 
     public Game(Player challenger) {
         rounds = 0;
         over = false;
         this.challenger = challenger;
+        startGame();
     }
 
     public void startGame() {
-        while (!over) {
-            //get player input
-            //set input fields
-            //determine round winner
+        //while (!over) {
+            challenger.sendMessage(ChatColor.GREEN + "Type /rock /paper or /scissors!");
+            opponent.sendMessage(ChatColor.GREEN + "Type /rock /paper or /scissors!");
             determineWinner();
-
-        }
+            checkIfOver();
+        //}
         gameOver();
     }
 
-    public boolean checkIfOver() {
+    public void checkIfOver() {
         if (challengerScore == 3 || opponenntScore == 3) {
             over = true;
         }
+    }
+
+    private void resetInputs() {
+        challengerInput = null;
+        opponentInput = null;
     }
 
     private void determineWinner() {
@@ -83,6 +109,9 @@ public class Game {
                 challengerScore++;
             }
         }
+        challenger.sendMessage(challenger.getName() + ": " + challengerScore);
+        opponent.sendMessage(opponent.getName() + ": " + opponenntScore);
+        resetInputs();
     }
 
     private void gameOver() {
@@ -164,5 +193,4 @@ public class Game {
     public void setOpponent(Player opponent) {
         this.opponent = opponent;
     }
-
 }

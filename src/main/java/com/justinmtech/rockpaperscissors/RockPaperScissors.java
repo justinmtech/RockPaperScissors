@@ -1,27 +1,22 @@
 package com.justinmtech.rockpaperscissors;
 
-import com.justinmtech.rockpaperscissors.commands.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 
 public final class RockPaperScissors extends JavaPlugin {
-    private HashMap<Player, Player> invites;
-    private HashMap<Player, Player> activeGames;
-
-
+    private HashMap<Player, Player> invites = new HashMap<>();
+    private HashMap<Player, Player> activeGames = new HashMap<>();
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        this.getCommand("rps").setExecutor(new RPSCommand());
-        this.getCommand("rps accept").setExecutor(new AcceptDuelCommand());
-        this.getCommand("rock").setExecutor(new RockCommand());
-        this.getCommand("paper").setExecutor(new PaperCommand());
-        this.getCommand("scissors").setExecutor(new ScissorsCommand());
-        invites = new HashMap<>();
-        activeGames = new HashMap<>();
+        //Plugin startup logic
+        Commands commands = new Commands(this);
+        this.getCommand("rps").setExecutor(commands);
+        this.getCommand("rock").setExecutor(commands);
+        this.getCommand("paper").setExecutor(commands);
+        this.getCommand("scissors").setExecutor(commands);
 
         System.out.println("RockPaperScissors enabled!");
     }
@@ -48,8 +43,8 @@ public final class RockPaperScissors extends JavaPlugin {
         this.invites = invites;
     }
 
-    public void addInvite(Player invited, Player inviter) {
-        invites.put(invited, inviter);
+    public void addInvite(Player player2, Player player1) {
+        invites.put(player2, player1);
     }
 
     public void removeInvite(Player invited) {
