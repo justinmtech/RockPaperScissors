@@ -9,6 +9,10 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
+//TODO Add configuration file
+//TODO Add Message handler and hook to config file for configurable messages
+//TODO Add configurable time limit for each rps round
+//TODO Add configurable broadcasts for matches
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
