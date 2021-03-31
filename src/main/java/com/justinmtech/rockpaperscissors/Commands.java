@@ -12,8 +12,8 @@ public class Commands implements CommandExecutor {
     private Player player1;
     private Player player2;
     private Player sender;
-    private Game game;
     private String[] args;
+    private Command command;
 
     public Commands(RockPaperScissors plugin) {
         this.plugin = plugin;
@@ -23,6 +23,7 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         this.sender = (Player) sender;
         this.args = args;
+        this.command = command;
         player1 = (Player) sender;
 
         if (command.getName().equalsIgnoreCase("rps")) {
@@ -42,9 +43,42 @@ public class Commands implements CommandExecutor {
             else {
                 showHelp();
             }
-            return true;
         }
-            return false;
+
+        else {
+            if (command.getName().equalsIgnoreCase("rock")) {
+                if (plugin.getGame(player1) != null) {
+                    plugin.getGame(player1).setPlayerInput(player1, "rock");
+                } else {
+                    player1.sendMessage(ChatColor.RED + "You are not in a game!");
+                }
+            }
+
+                if (command.getName().equalsIgnoreCase("paper")) {
+                    if (plugin.getGame(player1) != null) {
+                        plugin.getGame(player1).setPlayerInput(player1, "paper");
+
+                    } else {
+                        player1.sendMessage(ChatColor.RED + "You are not in a game!");
+                    }
+                }
+
+                if (command.getName().equalsIgnoreCase("scissors")) {
+                    if (plugin.getGame(player1) != null) {
+                        plugin.getGame(player1).setPlayerInput(player1, "paper");
+                    } else {
+                        player1.sendMessage(ChatColor.RED + "You are not in a game!");
+                    }
+                }
+            if (haveBothPlayersChosenMove()) {
+                plugin.getGame(player1).determineWinner();
+                plugin.resetInputs(player1);
+                plugin.getGame(player1).startRound();
+            } else {
+                player1.sendMessage("Only one player has made their move!");
+            }
+        }
+        return true;
     }
 
     private void showHelp() {
@@ -61,7 +95,7 @@ public class Commands implements CommandExecutor {
         try {
             player1 = plugin.getInvites().get(player2);
             sendMessageToBoth(ChatColor.GREEN + "Game starting!");
-            startGame();
+            createGameInstance();
             plugin.removeInvite(player2);
         } catch (NullPointerException e) {
             System.out.println(e.getCause());
@@ -95,12 +129,58 @@ public class Commands implements CommandExecutor {
             }
         }
 
-        private void startGame() {
-            game = new Game(player1, player2);
+        private void createGameInstance() {
+            plugin.addGame(new GameInstance(player1, player2));
         }
 
         private void sendMessageToBoth(String message) {
             player1.sendMessage(message);
             player2.sendMessage(message);
         }
+
+    private boolean haveBothPlayersChosenMove() {
+        if (plugin.getGame(player1).getPlayer1Input() != null && plugin.getGame(player2).getPlayer2Input() != null) {
+            return true;
+        } else
+            return false;
+    }
+
+    private void rockPaperOrScissors() {
+        if (command.getName().equalsIgnoreCase("rock")) {
+            if (sender.getName().equals(player1.getName())) {
+                plugin.getGame(player1).setPlayer1Input("rock");
+            } else {
+                plugin.getGame(player1).setPlayer2Input("rock");
+            }
+
+            if (command.getName().equalsIgnoreCase("paper")) {
+                if (sender.getName().equals(player1.getName())) {
+                    plugin.getGame(player1).setPlayer1Input("paper");
+
+                } else {
+                    plugin.getGame(player1).setPlayer2Input("paper");
+
+                }
+            }
+
+            if (command.getName().equalsIgnoreCase("scissors")) {
+                if (sender.getName().equals(player1.getName())) {
+                    plugin.getGame(player1).setPlayer1Input("scissors");
+                } else {
+                    plugin.getGame(player1).setPlayer2Input("scissors");
+
+                }
+            }
+        }
+            if (haveBothPlayersChosenMove()) {
+                plugin.getGame(player1).determineWinner();
+                resetInputs();
+                plugin.resetInputs(player1);
+                plugin.getGame(player1).startRound();
+            }
+        }
+
+    private void resetInputs() {
+        plugin.resetInputs(player1);
+    }
 }

@@ -7,15 +7,11 @@ description: A Minecraft plugin for playing "rock paper scissors".
 website: https://github.com/justinmtech
 commands:
   rps:
-    description:
     usage: /<command>
   rock:
-    description:
     usage: /<command>
   paper:
-    description:
     usage: /<command>
   scissors:
-    description:
     usage: /<command>
 
