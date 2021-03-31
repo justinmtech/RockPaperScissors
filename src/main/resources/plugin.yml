@@ -2,7 +2,7 @@ name: RockPaperScissors
 version: ${project.version}
 main: com.justinmtech.rockpaperscissors.RockPaperScissors
 api-version: 1.16
-authors: [ Justin ]
+author: [JustinMTech]
 description: A Minecraft plugin for playing "rock paper scissors".
 website: https://github.com/justinmtech
 commands:
@@ -14,4 +14,6 @@ commands:
     usage: /<command>
   scissors:
     usage: /<command>
+
+depend: [Vault]
 
