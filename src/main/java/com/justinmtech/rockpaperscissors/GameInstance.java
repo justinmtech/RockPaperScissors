@@ -44,8 +44,7 @@ public class GameInstance {
 
     //Show the players what to do after a game starts
     public void displayInstructions() {
-        player1.sendMessage(ChatColor.GOLD + "Type /rock, /paper or /scissors!");
-        player2.sendMessage(ChatColor.GOLD + "Type /rock, /paper or /scissors!");
+        SendMessage.gameInstructions(player1, player2);
     }
 
     //Check if the game is over yet
@@ -65,59 +64,38 @@ public class GameInstance {
     //Determine round winner and increment scores
     public void determineWinner() {
         if (player1Input == player2Input) {
-            player1.sendMessage(ChatColor.YELLOW + "Tie!");
-            player2.sendMessage(ChatColor.YELLOW + "Tie!");
+            SendMessage.matchTie(player1, player2);
         } else if (player1Input.equalsIgnoreCase("paper")) {
             if (player2Input.equalsIgnoreCase("rock")) {
                 player1Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player1.sendMessage(ChatColor.GREEN + "Round win!");
-                player2.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player1, player2);
             } else if (player2Input.equalsIgnoreCase("scissors")) {
                 player2Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GREEN + "Round win!");
-                player1.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player2, player1);
             }
         } else if (player1Input.equalsIgnoreCase("rock")) {
             if (player2Input.equalsIgnoreCase("paper")) {
                 player2Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GREEN + "Round win!");
-                player1.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player2, player1);
             } else if (player2Input.equalsIgnoreCase("scissors")) {
                 player1Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player1.sendMessage(ChatColor.GREEN + "Round win!");
-                player2.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player1, player2);
             }
         } else if (player1Input.equalsIgnoreCase("scissors")) {
             if (player2Input.equalsIgnoreCase("rock")) {
                 player2Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GREEN + "Round win!");
-                player1.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player2, player1);
             } else if (player2Input.equalsIgnoreCase("paper")) {
                 player1Score++;
-                player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player2.sendMessage(ChatColor.GRAY + "-----------------------------");
-                player1.sendMessage(ChatColor.GREEN + "Round win!");
-                player2.sendMessage(ChatColor.RED + "Round lose!");
+                SendMessage.roundEnd(player1, player2);
             }
         }
-        this.player1.sendMessage(ChatColor.AQUA + this.player1.getName() + ": " + player1Score);
-        this.player1.sendMessage(ChatColor.AQUA + this.player2.getName() + ": " + player2Score);
-        player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-        this.player2.sendMessage(ChatColor.AQUA + this.player2.getName() + ": " + player2Score);
-        this.player2.sendMessage(ChatColor.AQUA + this.player1.getName() + ": " + player1Score);
-        player2.sendMessage(ChatColor.GRAY + "-----------------------------");
+        SendMessage.roundResults(player1, player2, player1Score, player2Score);
 
+        //Reset player inputs
         resetInputs();
+
+        //Check if game is over
         isGameOver();
     }
 
@@ -126,21 +104,14 @@ public class GameInstance {
         Player winner = null;
         boolean gameCancelled = false;
         if (player1Score == 3) {
-            player1.sendMessage(ChatColor.GREEN + "You won!");
-            player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-            player2.sendMessage(ChatColor.RED + "You lost!");
-            player2.sendMessage(ChatColor.GRAY + "-----------------------------");
+            SendMessage.matchResults(player1, player2);
             winner = player1;
         } else if (player2Score == 3) {
-            player1.sendMessage(ChatColor.RED + "You lost!");
-            player1.sendMessage(ChatColor.GRAY + "-----------------------------");
-            player2.sendMessage(ChatColor.GREEN + "You won!");
-            player2.sendMessage(ChatColor.GRAY + "-----------------------------");
+            SendMessage.matchResults(player2, player1);
             winner = player2;
         } else {
             gameCancelled = true;
-            player1.sendMessage(ChatColor.RED + "Game cancelled!");
-            player2.sendMessage(ChatColor.RED + "Game cancelled!");
+            SendMessage.gameCancelled(player1, player2);
         }
         if (bet > 0 && !gameCancelled) {
             payBet(winner);
@@ -180,12 +151,12 @@ public class GameInstance {
     //Return bet to the player that is not in the parameter
     public void returnBet(Player player) {
         if (player1.getName() != player.getName()) {
-            player1.sendMessage(ChatColor.RED + "Your bet was returned due to the game being interrupted.");
+            SendMessage.betReturned(player1);
             plugin.getEcon().depositPlayer(Bukkit.getOfflinePlayer(player1.getUniqueId()), bet);
         }
 
         if (player2.getName() != player.getName()) {
-            player2.sendMessage(ChatColor.RED + "Your bet was returned due to the game being interrupted.");
+            SendMessage.betReturned(player2);
             plugin.getEcon().depositPlayer(Bukkit.getOfflinePlayer(player2.getUniqueId()), bet);
         }
     }

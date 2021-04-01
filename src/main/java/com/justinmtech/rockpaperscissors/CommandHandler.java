@@ -1,8 +1,6 @@
 package com.justinmtech.rockpaperscissors;
 
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -47,17 +45,17 @@ public class CommandHandler implements CommandExecutor {
             if (plugin.getGame(player) != null) {
                 if (command.getName().equalsIgnoreCase("rock")) {
                     plugin.getGame(player).setPlayerInput(player, "rock");
-                    player.sendMessage(ChatColor.RED + "You chose rock!");
+                    SendMessage.choseRock(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("paper")) {
                     plugin.getGame(player).setPlayerInput(player, "paper");
-                    player.sendMessage(ChatColor.RED + "You chose paper!");
+                    SendMessage.chosePaper(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("scissors")) {
                     plugin.getGame(player).setPlayerInput(player, "scissors");
-                    player.sendMessage(ChatColor.RED + "You chose scissors!");
+                    SendMessage.choseScissors(player);
                 }
                 if (plugin.getGame(player).haveBothPlayersChosenMove()) {
                     plugin.getGame(player).determineWinner();
@@ -69,18 +67,14 @@ public class CommandHandler implements CommandExecutor {
                     }
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "You are not in an rps match!");
+                SendMessage.notInGame(player);
             }
         }
         return true;
     }
 
     private void showHelp() {
-        player.sendMessage(ChatColor.AQUA + "RPS Help");
-        player.sendMessage(ChatColor.GRAY + "- /rps");
-        player.sendMessage(ChatColor.GRAY + "- /rps <player> - challenger a player");
-        player.sendMessage(ChatColor.GRAY + "- /rps <player> [bet]");
-        player.sendMessage(ChatColor.GRAY + "- /rps accept - accept last challenge");
+        SendMessage.help(player);
     }
 
     private void acceptMatch() {
@@ -89,26 +83,24 @@ public class CommandHandler implements CommandExecutor {
             player2 = player;
             player = plugin.getInvites().get(player2);
             bet = plugin.getBets().get(player);
-            System.out.println("Accept match bet value: " + bet);
-            sendMessageToBoth(ChatColor.GREEN + "Game starting!");
+            SendMessage.gameStarting(player, player2);
             createGameInstance(bet);
             plugin.removeInvite(player);
 
         } catch (NullPointerException e) {
-            System.out.println("Accept match error: " + e.getMessage());
-            player2.sendMessage(ChatColor.RED + "No one has challenged you yet!");
+            System.out.println(e.getMessage());
+            SendMessage.noInvites(player2);
         }
     }
 
     private void matchRequest() {
             try {
                 player2 = Bukkit.getServer().getPlayer(args[0]);
-                player.sendMessage(ChatColor.GOLD + "You challenged " + player2.getName() + " to an RPS match!");
-                player2.sendMessage(ChatColor.GOLD + player.getName() + " challenged you to an RPS match [BET: none]! Type /rps accept to accept.");
+                SendMessage.challenge(player, player2, 0);
                 plugin.addInvite(player2, player);
             } catch (NullPointerException e) {
                 System.out.println(e.getCause());
-                player.sendMessage("Player not found!");
+                SendMessage.playerNotFound(player);
             }
         }
 
@@ -118,18 +110,17 @@ public class CommandHandler implements CommandExecutor {
                 if (Integer.parseInt(args[1]) >= minBet) {
                     double bet = Integer.parseInt(args[1]);
                     if (checkSufficientBalance(bet)) {
-                        player.sendMessage(ChatColor.GOLD + "You challenged " + player2.getName() + " to an RPS match!");
-                        player2.sendMessage(ChatColor.GOLD + player.getName() + " challenged you to an RPS match [BET: $" + bet + "]! Type /rps accept to accept.");
+                        SendMessage.challenge(player, player2, bet);
                         plugin.addInvite(player2, player);
                         plugin.addBet(player, bet);
                     } else {
-                        player.sendMessage(ChatColor.RED + "You or the player challenged do not have enough for this bet!");
+                        SendMessage.insufficientFunds(player);
                     }
                 } else {
-                    player.sendMessage(ChatColor.RED + "The minimum bet is " + minBet + "!");
+                    SendMessage.minimumBet(player, minBet);
                 }
             } catch (Exception e) {
-                player.sendMessage("Target player not found");
+                SendMessage.playerNotFound(player);
             }
         }
 
@@ -145,10 +136,5 @@ public class CommandHandler implements CommandExecutor {
 
         private void createGameInstance(double bet) {
             plugin.addGame(new GameInstance(plugin, player, player2, bet));
-        }
-
-        private void sendMessageToBoth(String message) {
-            player.sendMessage(message);
-            player2.sendMessage(message);
         }
 }
