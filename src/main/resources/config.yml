@@ -1,0 +1,34 @@
+game-settings:
+  minBet: 100
+  scoreToWin: 3
+
+messages:
+  choseRock: "&cYou chose rock!"
+  chosePaper: "&cYou chose paper!"
+  choseScissors: "&cYou chose scissors!"
+  notInGame: "&cYou are not in an RPS match!"
+  gameStarting: "&aGame starting!"
+  noInvites: "&cNo one has challenged you yet!"
+  sendChallenge: "&6You challenged %p to an RPS match!"
+  receiveChallenge: "&6%p challenged you to an RPS match [BET: $%b]! Type /rps accept to accept."
+  insufficientFunds: "&cYou or the player challenged o not have enough for this bet!"
+  minimumBet: "&cThe minimum bet is %b!"
+  playerNotFound: "&cPlayer not found!"
+  gameInstructions: "&6Type /rock, /paper or /scissors!"
+  matchTie: "&eTie!"
+  roundEndWin: "&aRound win!"
+  roundEndLose: "&cRound lose!"
+  roundResults: "&b%p: %s"
+  matchResultsWin: "&aYou won!"
+  matchResultsLose: "&cYou lost!"
+  gameCancelled: "&cGame cancelled!"
+  betReturned: "&cYour bet was returned due to the game being interrupted.."
+  dividerLine: "&7-----------------------------"
+  help:
+    line-1: "&bRPS Help"
+    line-2: "- /rps"
+    line-3: "- /rps <player - challenge a player"
+    line-4: "- /rps <player> [bet]"
+    line-5: "- /rps accept - accept last challenge"
+
+

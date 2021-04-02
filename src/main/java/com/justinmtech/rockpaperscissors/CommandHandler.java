@@ -8,13 +8,16 @@ import org.bukkit.entity.Player;
 
 public class CommandHandler implements CommandExecutor {
     private static RockPaperScissors plugin;
+    private SendMessage sendMessage;
     private Player player;
     private Player player2;
     private String[] args;
-    private final static int minBet = 100;
+    private final int minBet;
 
     public CommandHandler(RockPaperScissors plugin) {
         this.plugin = plugin;
+        this.sendMessage = new SendMessage(plugin);
+        this.minBet = plugin.getConfig().getInt("game-settings.minBet");
     }
 
     @Override
@@ -45,17 +48,20 @@ public class CommandHandler implements CommandExecutor {
             if (plugin.getGame(player) != null) {
                 if (command.getName().equalsIgnoreCase("rock")) {
                     plugin.getGame(player).setPlayerInput(player, "rock");
-                    SendMessage.choseRock(player);
+                    //SendMessage.choseRock(player);
+                    sendMessage.choseRock(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("paper")) {
                     plugin.getGame(player).setPlayerInput(player, "paper");
-                    SendMessage.chosePaper(player);
+                    //SendMessage.chosePaper(player);
+                    sendMessage.chosePaper(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("scissors")) {
                     plugin.getGame(player).setPlayerInput(player, "scissors");
-                    SendMessage.choseScissors(player);
+                    //SendMessage.choseScissors(player);
+                    sendMessage.choseScissors(player);
                 }
                 if (plugin.getGame(player).haveBothPlayersChosenMove()) {
                     plugin.getGame(player).determineWinner();
@@ -67,14 +73,14 @@ public class CommandHandler implements CommandExecutor {
                     }
                 }
             } else {
-                SendMessage.notInGame(player);
+                sendMessage.notInGame(player);
             }
         }
         return true;
     }
 
     private void showHelp() {
-        SendMessage.help(player);
+        sendMessage.help(player);
     }
 
     private void acceptMatch() {
@@ -83,24 +89,24 @@ public class CommandHandler implements CommandExecutor {
             player2 = player;
             player = plugin.getInvites().get(player2);
             bet = plugin.getBets().get(player);
-            SendMessage.gameStarting(player, player2);
+            sendMessage.gameStarting(player, player2);
             createGameInstance(bet);
             plugin.removeInvite(player);
 
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
-            SendMessage.noInvites(player2);
+            sendMessage.noInvites(player2);
         }
     }
 
     private void matchRequest() {
             try {
                 player2 = Bukkit.getServer().getPlayer(args[0]);
-                SendMessage.challenge(player, player2, 0);
+                sendMessage.challenge(player, player2, 0);
                 plugin.addInvite(player2, player);
             } catch (NullPointerException e) {
                 System.out.println(e.getCause());
-                SendMessage.playerNotFound(player);
+                sendMessage.playerNotFound(player);
             }
         }
 
@@ -110,17 +116,17 @@ public class CommandHandler implements CommandExecutor {
                 if (Integer.parseInt(args[1]) >= minBet) {
                     double bet = Integer.parseInt(args[1]);
                     if (checkSufficientBalance(bet)) {
-                        SendMessage.challenge(player, player2, bet);
+                        sendMessage.challenge(player, player2, bet);
                         plugin.addInvite(player2, player);
                         plugin.addBet(player, bet);
                     } else {
-                        SendMessage.insufficientFunds(player);
+                        sendMessage.insufficientFunds(player);
                     }
                 } else {
-                    SendMessage.minimumBet(player, minBet);
+                    sendMessage.minimumBet(player, minBet);
                 }
             } catch (Exception e) {
-                SendMessage.playerNotFound(player);
+                sendMessage.playerNotFound(player);
             }
         }
 

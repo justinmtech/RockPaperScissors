@@ -4,115 +4,135 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class SendMessage {
+    private static RockPaperScissors plugin;
 
-    public static void choseRock(Player player) {
+    public SendMessage(RockPaperScissors plugin) {
+        this.plugin = plugin;
+    }
+
+    public void choseRock(Player player) {
         dividerLine(player);
-        player.sendMessage(ChatColor.RED + "You chose rock!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.choseRock")));
     }
 
-    public static void choseScissors(Player player) {
+    public void choseScissors(Player player) {
         dividerLine(player);
-        player.sendMessage(ChatColor.RED + "You chose scissors!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.choseScissors")));
+
 
     }
 
-    public static void chosePaper(Player player) {
+    public void chosePaper(Player player) {
         dividerLine(player);
-        player.sendMessage(ChatColor.RED + "You chose paper!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.chosePaper")));
+
 
     }
 
-    public static void notInGame(Player player) {
-        player.sendMessage(ChatColor.RED + "You are not in an rps match!");
+    public void notInGame(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.notInGame")));
+
 
     }
 
-    public static void gameStarting(Player player, Player player2) {
-        toBoth(player, player2, ChatColor.GREEN + "Game starting!");
+    public void gameStarting(Player player, Player player2) {
+        toBoth(player, player2, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.gameStarting")));
     }
 
-    public static void noInvites(Player player) {
-        player.sendMessage(ChatColor.RED + "No one has challenged you yet!");
-
+    public void noInvites(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.noInvites")));
     }
 
-    public static void challenge(Player player, Player player2, double bet) {
-        player.sendMessage(ChatColor.GOLD + "You challenged " + player2.getName() + " to an RPS match!");
-        player2.sendMessage(ChatColor.GOLD + player.getName() + " challenged you to an RPS match [BET: $" + bet + "]! Type /rps accept to accept.");
+    public void challenge(Player player, Player player2, double bet) {
+        //player.sendMessage(ChatColor.GOLD + "You challenged " + player2.getName() + " to an RPS match!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.sendChallenge")).replace("%p", player2.getName()).replace("%b", String.valueOf(bet)));
 
-    }
+        //player2.sendMessage(ChatColor.GOLD + player.getName() + " challenged you to an RPS match [BET: $" + bet + "]! Type /rps accept to accept.");
+        player2.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.receiveChallenge")).replace("%p", player.getName()).replace("%b", String.valueOf(bet)));
 
-    public static void insufficientFunds(Player player) {
-        player.sendMessage(ChatColor.RED + "You or the player challenged do not have enough for this bet!");
-
-    }
-
-    public static void minimumBet(Player player, double minBet) {
-        player.sendMessage(ChatColor.RED + "The minimum bet is " + minBet + "!");
 
     }
 
-    public static void playerNotFound(Player player) {
-        player.sendMessage("Player not found");
+    public void insufficientFunds(Player player) {
+        //player.sendMessage(ChatColor.RED + "You or the player challenged do not have enough for this bet!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.insufficientFunds")));
+
 
     }
 
-    public static void gameInstructions(Player player, Player player2) {
-        player.sendMessage(ChatColor.GOLD + "Type /rock, /paper or /scissors!");
-        player2.sendMessage(ChatColor.GOLD + "Type /rock, /paper or /scissors!");
+    public void minimumBet(Player player, double minBet) {
+        //player.sendMessage(ChatColor.RED + "The minimum bet is " + minBet + "!");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.minimumBet")).replace("%b", String.valueOf(minBet)));
+
+
     }
 
-    public static void matchTie(Player player, Player player2) {
-        toBoth(player, player2,ChatColor.YELLOW + "Tie!");
+    public void playerNotFound(Player player) {
+        //player.sendMessage("Player not found");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.playerNotFound")));
+
+
     }
 
-    public static void dividerLine(Player player) {
-        player.sendMessage(ChatColor.GRAY + "-----------------------------");
+    public void gameInstructions(Player player, Player player2) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.gameInstructions")));
+        player2.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.gameInstructions")));
+
     }
 
-    public static void roundEnd(Player winner, Player loser) {
+    public void matchTie(Player player, Player player2) {
+        toBoth(player, player2, plugin.getConfig().getString("messages.Tie"));
+    }
+
+    public void dividerLine(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.dividerLine")));
+
+    }
+
+    public void roundEnd(Player winner, Player loser) {
         dividerLine(winner);
-        winner.sendMessage(ChatColor.GREEN + "Round win!");
+        winner.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundEndWin")));
+
         dividerLine(loser);
-        loser.sendMessage(ChatColor.RED + "Round lose!");
+        loser.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundEndLose")));
+
     }
 
-    public static void roundResults(Player player, Player player2, int player1Score, int player2Score) {
-        player.sendMessage(ChatColor.AQUA + player.getName() + ": " + player1Score);
-        player.sendMessage(ChatColor.AQUA + player2.getName() + ": " + player2Score);
+    public void roundResults(Player player, Player player2, int player1Score, int player2Score) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundResults")).replace("%p", player.getName()).replace("%s", String.valueOf(player1Score)));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundResults")).replace("%p", player2.getName()).replace("%s", String.valueOf(player2Score)));
         dividerLine(player);
-        player2.sendMessage(ChatColor.AQUA + player2.getName() + ": " + player2Score);
-        player2.sendMessage(ChatColor.AQUA + player.getName() + ": " + player1Score);
+
+        player2.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundResults")).replace("%p", player2.getName()).replace("%s", String.valueOf(player2Score)));
+        player2.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundResults")).replace("%p", player.getName()).replace("%s", String.valueOf(player1Score)));
         dividerLine(player2);
     }
 
-    public static void matchResults(Player winner, Player loser) {
-        winner.sendMessage(ChatColor.GREEN + "You won!");
+    public void matchResults(Player winner, Player loser) {
+        winner.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.matchResultsWin")));
         dividerLine(winner);
-        loser.sendMessage(ChatColor.RED + "You lost!");
+        loser.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.matchResultsLose")));
         dividerLine(loser);
-
     }
 
-    public static void gameCancelled(Player player, Player player2) {
-        player.sendMessage(ChatColor.RED + "Game cancelled!");
-        player2.sendMessage(ChatColor.RED + "Game cancelled!");
+    public void gameCancelled(Player player, Player player2) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.gameCancelled")));
+        player2.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.gameCancelled")));
     }
 
-    public static void betReturned(Player player) {
-        player.sendMessage(ChatColor.RED + "Your bet was returned due to the game being interrupted.");
-
+    public void betReturned(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.betReturned")));
     }
 
-    public static void help(Player player) {
-        player.sendMessage(ChatColor.AQUA + "RPS Help");
-        player.sendMessage(ChatColor.GRAY + "- /rps");
-        player.sendMessage(ChatColor.GRAY + "- /rps <player> - challenger a player");
-        player.sendMessage(ChatColor.GRAY + "- /rps <player> [bet]");
-        player.sendMessage(ChatColor.GRAY + "- /rps accept - accept last challenge");
+    public void help(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.help.line-1")));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.help.line-2")));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.help.line-3")));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.help.line-4")));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.help.line-5")));
     }
 
-    public static void toBoth(Player player, Player player2, String message) {
+    public void toBoth(Player player, Player player2, String message) {
         player.sendMessage(message);
         player2.sendMessage(message);
     }

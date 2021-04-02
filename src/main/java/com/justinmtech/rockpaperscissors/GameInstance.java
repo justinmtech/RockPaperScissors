@@ -2,7 +2,6 @@ package com.justinmtech.rockpaperscissors;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 //The logic for an RPS match
@@ -28,15 +27,19 @@ public class GameInstance {
 
     //What score should the game end at?
     //One round = One win
-    private static int scoreToWin = 3;
+    private int scoreToWin;
+
+    private SendMessage sendMessage;
 
     //Construct a game instance with Main class, the two players and a bet
     public GameInstance(RockPaperScissors plugin, Player player1, Player player2, double bet) {
         this.plugin = plugin;
+        this.sendMessage = new SendMessage(plugin);
         over = false;
         this.bet = bet;
         this.player1 = player1;
         this.player2 = player2;
+        scoreToWin = plugin.getConfig().getInt("game-settings.scoreToWin");
         if (collectBet()) {
             displayInstructions();
         }
@@ -44,7 +47,7 @@ public class GameInstance {
 
     //Show the players what to do after a game starts
     public void displayInstructions() {
-        SendMessage.gameInstructions(player1, player2);
+        sendMessage.gameInstructions(player1, player2);
     }
 
     //Check if the game is over yet
@@ -64,33 +67,33 @@ public class GameInstance {
     //Determine round winner and increment scores
     public void determineWinner() {
         if (player1Input == player2Input) {
-            SendMessage.matchTie(player1, player2);
+            sendMessage.matchTie(player1, player2);
         } else if (player1Input.equalsIgnoreCase("paper")) {
             if (player2Input.equalsIgnoreCase("rock")) {
                 player1Score++;
-                SendMessage.roundEnd(player1, player2);
+                sendMessage.roundEnd(player1, player2);
             } else if (player2Input.equalsIgnoreCase("scissors")) {
                 player2Score++;
-                SendMessage.roundEnd(player2, player1);
+                sendMessage.roundEnd(player2, player1);
             }
         } else if (player1Input.equalsIgnoreCase("rock")) {
             if (player2Input.equalsIgnoreCase("paper")) {
                 player2Score++;
-                SendMessage.roundEnd(player2, player1);
+                sendMessage.roundEnd(player2, player1);
             } else if (player2Input.equalsIgnoreCase("scissors")) {
                 player1Score++;
-                SendMessage.roundEnd(player1, player2);
+                sendMessage.roundEnd(player1, player2);
             }
         } else if (player1Input.equalsIgnoreCase("scissors")) {
             if (player2Input.equalsIgnoreCase("rock")) {
                 player2Score++;
-                SendMessage.roundEnd(player2, player1);
+                sendMessage.roundEnd(player2, player1);
             } else if (player2Input.equalsIgnoreCase("paper")) {
                 player1Score++;
-                SendMessage.roundEnd(player1, player2);
+                sendMessage.roundEnd(player1, player2);
             }
         }
-        SendMessage.roundResults(player1, player2, player1Score, player2Score);
+        sendMessage.roundResults(player1, player2, player1Score, player2Score);
 
         //Reset player inputs
         resetInputs();
@@ -104,14 +107,14 @@ public class GameInstance {
         Player winner = null;
         boolean gameCancelled = false;
         if (player1Score == 3) {
-            SendMessage.matchResults(player1, player2);
+            sendMessage.matchResults(player1, player2);
             winner = player1;
         } else if (player2Score == 3) {
-            SendMessage.matchResults(player2, player1);
+            sendMessage.matchResults(player2, player1);
             winner = player2;
         } else {
             gameCancelled = true;
-            SendMessage.gameCancelled(player1, player2);
+            sendMessage.gameCancelled(player1, player2);
         }
         if (bet > 0 && !gameCancelled) {
             payBet(winner);
@@ -151,12 +154,12 @@ public class GameInstance {
     //Return bet to the player that is not in the parameter
     public void returnBet(Player player) {
         if (player1.getName() != player.getName()) {
-            SendMessage.betReturned(player1);
+            sendMessage.betReturned(player1);
             plugin.getEcon().depositPlayer(Bukkit.getOfflinePlayer(player1.getUniqueId()), bet);
         }
 
         if (player2.getName() != player.getName()) {
-            SendMessage.betReturned(player2);
+            sendMessage.betReturned(player2);
             plugin.getEcon().depositPlayer(Bukkit.getOfflinePlayer(player2.getUniqueId()), bet);
         }
     }

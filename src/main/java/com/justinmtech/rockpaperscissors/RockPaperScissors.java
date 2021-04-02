@@ -9,8 +9,6 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
-//TODO Add configuration file
-//TODO Add Message handler and hook to config file for configurable messages
 //TODO Add configurable time limit for each rps round
 //TODO Add configurable broadcasts for matches
 public final class RockPaperScissors extends JavaPlugin {
@@ -26,6 +24,7 @@ public final class RockPaperScissors extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.saveDefaultConfig();
         CommandHandler commandHandler = new CommandHandler(this);
         this.getCommand("rps").setExecutor(commandHandler);
         this.getCommand("rock").setExecutor(commandHandler);
