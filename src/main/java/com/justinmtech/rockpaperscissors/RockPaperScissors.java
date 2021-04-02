@@ -11,6 +11,7 @@ import net.milkbowl.vault.economy.Economy;
 //Main plugin class
 //TODO Add configurable time limit for each rps round
 //TODO Add configurable broadcasts for matches
+//TODO Add config messages for eco payouts
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
