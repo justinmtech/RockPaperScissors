@@ -84,7 +84,7 @@ public class CommandHandler implements CommandExecutor {
     }
 
     private void acceptMatch() {
-        double bet = 0;
+        int bet = 0;
         try {
             player2 = player;
             player = plugin.getInvites().get(player2);
@@ -114,7 +114,7 @@ public class CommandHandler implements CommandExecutor {
             try {
                 player2 = Bukkit.getServer().getPlayer(args[0]);
                 if (Integer.parseInt(args[1]) >= minBet) {
-                    double bet = Integer.parseInt(args[1]);
+                    int bet = Integer.parseInt(args[1]);
                     if (checkSufficientBalance(bet)) {
                         sendMessage.challenge(player, player2, bet);
                         plugin.addInvite(player2, player);
@@ -140,7 +140,7 @@ public class CommandHandler implements CommandExecutor {
             }
         }
 
-        private void createGameInstance(double bet) {
+        private void createGameInstance(int bet) {
             plugin.addGame(new GameInstance(plugin, player, player2, bet));
         }
 }

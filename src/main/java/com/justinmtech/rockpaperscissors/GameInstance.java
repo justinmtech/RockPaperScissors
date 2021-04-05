@@ -2,6 +2,7 @@ package com.justinmtech.rockpaperscissors;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 //The logic for an RPS match
@@ -10,7 +11,7 @@ public class GameInstance {
     private boolean over;
 
     //Bet amount (0 if none)
-    private double bet;
+    private int bet;
 
     //Player 1
     private Player player1;
@@ -32,7 +33,7 @@ public class GameInstance {
     private SendMessage sendMessage;
 
     //Construct a game instance with Main class, the two players and a bet
-    public GameInstance(RockPaperScissors plugin, Player player1, Player player2, double bet) {
+    public GameInstance(RockPaperScissors plugin, Player player1, Player player2, int bet) {
         this.plugin = plugin;
         this.sendMessage = new SendMessage(plugin);
         over = false;
@@ -105,28 +106,43 @@ public class GameInstance {
     //Game over sequence
     private void gameOver() {
         Player winner = null;
+        Player loser = null;
         boolean gameCancelled = false;
         if (player1Score == 3) {
             sendMessage.matchResults(player1, player2);
             winner = player1;
+            loser = player2;
         } else if (player2Score == 3) {
             sendMessage.matchResults(player2, player1);
             winner = player2;
+            loser = player1;
         } else {
             gameCancelled = true;
             sendMessage.gameCancelled(player1, player2);
         }
+
         if (bet > 0 && !gameCancelled) {
-            payBet(winner);
+            payBet(winner, loser);
+        }
+
+        if (bet > plugin.getConfig().getDouble("game-settings.broadcastMatchMinBet") && !gameCancelled) {
+            sendMessage.matchBroadcast(player1, player2, bet);
         }
     }
 
     //Pay the bet to the winner (original bet x2)
-    private void payBet(Player winner) {
+    private void payBet(Player winner, Player loser) {
+            int payout = bet * 2;
         if (bet > 0) {
-            double payout = bet * 2;
             EconomyResponse r1 = plugin.getEcon().depositPlayer(winner, payout);
-            winner.sendMessage(String.format("%s was added to your account for winning the match!", plugin.getEcon().format(r1.amount)));
+
+            winner.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    String.format(plugin.getConfig().getString("messages.betWin"),
+                            plugin.getEcon().format(r1.amount / 2))));
+
+            loser.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfig().getString("messages.betLose")
+                            .replace("%s", String.valueOf((int) bet))));
         }
     }
 
@@ -135,15 +151,15 @@ public class GameInstance {
         boolean r1Success = false;
         boolean r2Success = false;
         if (bet > 0) {
-            EconomyResponse r1 = plugin.getEcon().withdrawPlayer(Bukkit.getOfflinePlayer(player1.getUniqueId()), bet);
+            EconomyResponse r1 = plugin.getEcon()
+                    .withdrawPlayer(Bukkit.getOfflinePlayer(player1.getUniqueId()), bet);
             if (r1.transactionSuccess()) {
-            player1.sendMessage(String.format("%s was taken from your account!", plugin.getEcon().format(r1.amount)));
-            r1Success = true;
+                r1Success = true;
             }
-            EconomyResponse r2 = plugin.getEcon().withdrawPlayer(Bukkit.getOfflinePlayer(player2.getUniqueId()), bet);
+            EconomyResponse r2 = plugin.getEcon()
+                    .withdrawPlayer(Bukkit.getOfflinePlayer(player2.getUniqueId()), bet);
             if (r2.transactionSuccess()) {
-            player2.sendMessage(String.format("%s was taken from your account!", plugin.getEcon().format(r2.amount)));
-            r2Success = true;
+                r2Success = true;
             }
         } else {
             return false;

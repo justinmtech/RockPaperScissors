@@ -10,14 +10,12 @@ import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
 //TODO Add configurable time limit for each rps round
-//TODO Add configurable broadcasts for matches
-//TODO Add config messages for eco payouts
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
     private Economy econ = null;
     //Used to store bets and the player that made them
-    private HashMap<Player, Double> bets = new HashMap();
+    private HashMap<Player, Integer> bets = new HashMap();
     //Stores the invited player as well as the inviter
     private HashMap<Player, Player> invites = new HashMap<>();
     //Stores active GameInstance objects
@@ -105,11 +103,11 @@ public final class RockPaperScissors extends JavaPlugin {
         invites.remove(invited);
     }
 
-    public HashMap<Player, Double> getBets() {
+    public HashMap<Player, Integer> getBets() {
         return bets;
     }
 
-    public void addBet(Player player, double bet) {
+    public void addBet(Player player, int bet) {
         bets.put(player, bet);
     }
 }

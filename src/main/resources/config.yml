@@ -1,6 +1,7 @@
 game-settings:
   minBet: 100
   scoreToWin: 3
+  broadcastMatchMinBet: 1000
 
 messages:
   choseRock: "&cYou chose rock!"
@@ -20,9 +21,12 @@ messages:
   roundEndLose: "&cRound lose!"
   roundResults: "&b%p: %s"
   matchResultsWin: "&aYou won!"
+  betWin: "&aYou received %s from your RPS bet!"
+  betLose: "&cYou lost $%s from your RPS bet!"
   matchResultsLose: "&cYou lost!"
   gameCancelled: "&cGame cancelled!"
   betReturned: "&cYour bet was returned due to the game being interrupted.."
+  matchBroadcast: "&7[&6RPS&7] &b%w &ewon an RPS match against &c%l &efor &a$%b&e!"
   dividerLine: "&7-----------------------------"
   help:
     line-1: "&bRPS Help"
