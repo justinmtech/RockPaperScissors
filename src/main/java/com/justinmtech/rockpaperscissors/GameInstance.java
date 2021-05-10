@@ -2,7 +2,6 @@ package com.justinmtech.rockpaperscissors;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -175,7 +174,7 @@ public class GameInstance {
         }
 
         //Remove active invite
-        plugin.removeInvite(player2);
+        plugin.consumeInvite(player2, player1);
     }
 
     //Pay the bet to the winner (original bet x2)

@@ -1,5 +1,6 @@
 package com.justinmtech.rockpaperscissors;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -108,8 +109,7 @@ public class CommandHandler implements CommandExecutor {
             ArrayList invitesSentToPlayer2 = plugin.getInvites().get(player2);
 
             //Check if the command sender has any invites from the player entered in the command
-            if (plugin.checkIfInvited(inputPlayer, player)) {
-                System.out.println("Player invited");
+            if (!plugin.checkIfInGame(player) && plugin.checkIfInvited(inputPlayer, player)) {
 
                 //Get challenger based on the inputPlayer variable (rps /accept [player])
                 Player challenger = (Player) invitesSentToPlayer2.stream().filter(p -> p.equals(inputPlayer)).findFirst().get();
@@ -127,23 +127,31 @@ public class CommandHandler implements CommandExecutor {
                 //If /rps accept <player> equals inviter's username
                 if (args[1].equalsIgnoreCase(player.getName())) {
                     //Remove the challenger's invite since it is being used
-                    plugin.removeInvite(player);
+                    plugin.consumeInvite(player2, player);
                     //Start the game with the desired bet amount
                     createGameInstance(bet);
                 }
+            } else {
+
+                if (plugin.checkIfInGame(player)) {
+                    sendMessage.alreadyInGame(player);
+                } else if (plugin.checkIfInvited(inputPlayer, player)) {
+                    sendMessage.inviteExists(player);
+                }
+
             }
 
         } catch (Exception e) {
             //If the command is /rps accept without the player name..
             if (args.length == 1) {
                 //Tell player to include the name of inviter in /rps accept (ie: /rps accept John15)
-                sendMessage.noPlayerEntered(player2);
+                sendMessage.noPlayerEntered(player);
             } else {
                 //Tell player they have no invites
-                sendMessage.noInvites(player2);
+                sendMessage.noInvites(player);
             }
+            System.out.println("Accept Match Error: " + e.getCause());
         }
-        System.out.println("End of method reached");
     }
 
     private void matchRequest() {
@@ -164,7 +172,7 @@ public class CommandHandler implements CommandExecutor {
 
     private void denyLastRequest() {
         if (checkIfInvitedAlready()) {
-            plugin.removeInvite(player);
+            plugin.consumeInvite(player2, player);
         } else {
             sendMessage.noInvites(player);
         }
@@ -182,8 +190,8 @@ public class CommandHandler implements CommandExecutor {
                     break;
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (NullPointerException e) {
+            System.out.println("Invite Check Error: " + e.getCause());
             }
             return invited;
     }

@@ -34,6 +34,11 @@ public class SendMessage {
                 plugin.getConfig().getString("messages.notInGame")));
     }
 
+    public void alreadyInGame(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfig().getString("messages.alreadyInGame")));
+    }
+
     public void gameStarting(Player player, Player player2) {
         toBoth(player, player2, ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("messages.gameStarting")));

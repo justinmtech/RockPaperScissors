@@ -10,7 +10,6 @@ import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
 //TODO Add configurable time limit for each rps round
-//TODO Prevent inviting players to matches who are already in-game
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
@@ -96,35 +95,63 @@ public final class RockPaperScissors extends JavaPlugin {
         return invites;
     }
 
-//    public Player getChallenger() {
-//    }
-
-    public boolean checkIfInvited(Player player, Player player2) {
+    public boolean checkIfInvited(Player player, Player player2) throws NullPointerException {
         boolean invited = false;
-        ArrayList invitesSent = invites.get(player2);
-        for (int i = 0; i < invitesSent.size(); i++) {
-            if (invitesSent.get(i).equals(player)) {
-                invited = true;
-                break;
+        try {
+            ArrayList invitesSent = invites.get(player2);
+            System.out.println(invitesSent.size());
+            System.out.println(invitesSent.get(0));
+            System.out.println(invitesSent.get(1));
+
+            if (invitesSent.size() < 1) {
+                throw new NullPointerException();
             }
+
+            for (int i = 0; i < invitesSent.size(); i++) {
+                if (invitesSent.get(i).equals(player)) {
+                    invited = true;
+                    break;
+                }
+            }
+        } catch (NullPointerException e) {
+            System.out.println("No invites error: " + e.getCause());
+            throw new NullPointerException();
         }
         return invited;
     }
 
+    public boolean checkIfInGame(Player player) {
+        boolean inGame = false;
+        for (int i = 0; i < gameInstances.size(); i++) {
+            if (getGame(player) != null) {
+                inGame = true;
+            }
+        }
+        return inGame;
+    }
+
     public void addInvite(Player player2, Player player1) {
         try {
-            invites.get(player2);
-            ArrayList players = new ArrayList();
-            players.add(player1);
-            invites.put(player2, players);
+            ArrayList<Player> invitesSent = invites.get(player2);
+            invitesSent.add(player1);
+            invites.put(player2, invitesSent);
+            //invites.get(player2).add(player1);
         } catch(Exception e) {
-            System.out.println(e.getMessage());
-            invites.get(player2).add(player1);
+            ArrayList invitesSent = new ArrayList();
+            invitesSent.add(player1);
+            invites.put(player2, invitesSent);
+            //invites.get(player2).add(player1);
+            System.out.println("Add invite error " + e.getMessage());
         }
     }
 
-    public void removeInvite(Player invited) {
-        invites.remove(invited);
+    public void consumeInvite(Player player2, Player player1) {
+        System.out.println(invites.get(player2));
+        if (invites.get(player2).size() <= 1) {
+            invites.remove(player2);
+        } else {
+            invites.get(player2).remove(player1);
+        }
     }
 
     public HashMap<Player, Integer> getBets() {
