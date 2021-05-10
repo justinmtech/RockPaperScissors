@@ -125,13 +125,30 @@ public class SendMessage {
         dividerLine(player2);
     }
 
-    public void matchResults(Player winner, Player loser) {
-        winner.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfig().getString("messages.matchResultsWin")));
-        dividerLine(winner);
-        loser.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfig().getString("messages.matchResultsLose")));
-        dividerLine(loser);
+    public void matchResults(Player winner, Player loser, int bet) {
+        if (bet == 0) {
+            winner.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfig().getString("messages.matchResultsWin")));
+            dividerLine(winner);
+        }
+
+        if (bet > 0) {
+            winner.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfig().getString("messages.matchResultsWinWithBet")).replace("%b", String.valueOf(bet)));
+            dividerLine(winner);
+        }
+
+        if (bet == 0) {
+            loser.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfig().getString("messages.matchResultsLose")));
+            dividerLine(loser);
+        }
+
+        if (bet > 0) {
+            loser.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfig().getString("messages.matchResultsLoseWithBet")).replace("%b", String.valueOf(bet)));
+            dividerLine(loser);
+        }
     }
 
     public void gameCancelled(Player player, Player player2) {
@@ -169,21 +186,16 @@ public class SendMessage {
                 .replace("%b", betString)));
     }
 
-    public void betWin(Player player, int bet) {
-        String betString = String.valueOf(bet);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfig().getString("messages.betWin").replace("%s", betString)));
-    }
-
-    public void betLose(Player player, int bet) {
-        String betString = String.valueOf(bet);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfig().getString("messages.betLose").replace("%s", betString)));
-    }
-
     public void toBoth(Player player, Player player2, String message) {
         player.sendMessage(message);
         player2.sendMessage(message);
     }
 
+    public void inviteExists(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.inviteExists")));
+    }
+
+    public void noPlayerEntered(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.noPlayerEntered")));
+    }
 }

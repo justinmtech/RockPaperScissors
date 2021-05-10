@@ -10,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
 //TODO Add configurable time limit for each rps round
+//TODO Prevent inviting players to matches who are already in-game
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
@@ -17,7 +18,7 @@ public final class RockPaperScissors extends JavaPlugin {
     //Used to store bets and the player that made them
     private HashMap<Player, Integer> bets = new HashMap();
     //Stores the invited player as well as the inviter
-    private HashMap<Player, Player> invites = new HashMap<>();
+    private HashMap<Player, ArrayList<Player>> invites = new HashMap<>();
     //Stores active GameInstance objects
     private ArrayList<GameInstance> gameInstances = new ArrayList<>();
 
@@ -91,12 +92,35 @@ public final class RockPaperScissors extends JavaPlugin {
         this.econ = econ;
     }
 
-    public HashMap<Player, Player> getInvites() {
+    public HashMap<Player, ArrayList<Player>> getInvites() {
         return invites;
     }
 
+//    public Player getChallenger() {
+//    }
+
+    public boolean checkIfInvited(Player player, Player player2) {
+        boolean invited = false;
+        ArrayList invitesSent = invites.get(player2);
+        for (int i = 0; i < invitesSent.size(); i++) {
+            if (invitesSent.get(i).equals(player)) {
+                invited = true;
+                break;
+            }
+        }
+        return invited;
+    }
+
     public void addInvite(Player player2, Player player1) {
-        invites.put(player2, player1);
+        try {
+            invites.get(player2);
+            ArrayList players = new ArrayList();
+            players.add(player1);
+            invites.put(player2, players);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            invites.get(player2).add(player1);
+        }
     }
 
     public void removeInvite(Player invited) {

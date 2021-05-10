@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 //The logic for an RPS match
 public class GameInstance {
@@ -41,14 +42,58 @@ public class GameInstance {
         this.player1 = player1;
         this.player2 = player2;
         scoreToWin = plugin.getConfig().getInt("game-settings.scoreToWin");
-        if (collectBet()) {
-            displayInstructions();
-        }
+        sendMessage.gameStarting(player1, player2);
+        displayInstructions();
     }
 
     //Show the players what to do after a game starts
     public void displayInstructions() {
         sendMessage.gameInstructions(player1, player2);
+        //start timer
+        //doTimer();
+    }
+
+    private void doTimer() {
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncDelayedTask(plugin, () -> {
+            checkIfInputIsNull();
+            determineWinner();
+        }, 140);
+    }
+
+    private void giveRandomMove(int player) {
+        int min = 1;
+        int max = 3;
+        int randomNumber = (int)Math.floor(Math.random()*(min - max + 1) + min);
+
+        if (randomNumber == 1) {
+            if (player == 1) {
+                setPlayerInput(this.player1, "rock");
+            } else {
+                setPlayerInput(this.player2, "rock");
+            }
+        } else if (randomNumber == 2) {
+            if (player == 1) {
+                setPlayerInput(this.player1, "paper");
+            } else {
+                setPlayerInput(this.player2, "paper");
+            }
+        } else {
+            if (player == 1) {
+            setPlayerInput(this.player1, "scissors");
+            } else {
+                setPlayerInput(this.player2, "scissors");
+            }
+        }
+    }
+
+    private void checkIfInputIsNull() {
+        int player = 0;
+        if (player1Input == null) {
+            giveRandomMove(1);
+        } else if (player2Input == null) {
+            giveRandomMove(2);
+        }
     }
 
     //Check if the game is over yet
@@ -109,11 +154,11 @@ public class GameInstance {
         Player loser = null;
         boolean gameCancelled = false;
         if (player1Score == 3) {
-            sendMessage.matchResults(player1, player2);
+            sendMessage.matchResults(player1, player2, bet);
             winner = player1;
             loser = player2;
         } else if (player2Score == 3) {
-            sendMessage.matchResults(player2, player1);
+            sendMessage.matchResults(player2, player1, bet);
             winner = player2;
             loser = player1;
         } else {
@@ -128,21 +173,16 @@ public class GameInstance {
         if (bet > plugin.getConfig().getDouble("game-settings.broadcastMatchMinBet") && !gameCancelled) {
             sendMessage.matchBroadcast(player1, player2, bet);
         }
+
+        //Remove active invite
+        plugin.removeInvite(player2);
     }
 
     //Pay the bet to the winner (original bet x2)
     private void payBet(Player winner, Player loser) {
             int payout = bet * 2;
         if (bet > 0) {
-            EconomyResponse r1 = plugin.getEcon().depositPlayer(winner, payout);
-
-            winner.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    String.format(plugin.getConfig().getString("messages.betWin"),
-                            plugin.getEcon().format(r1.amount / 2))));
-
-            loser.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfig().getString("messages.betLose")
-                            .replace("%s", String.valueOf((int) bet))));
+            plugin.getEcon().depositPlayer(winner, payout);
         }
     }
 
