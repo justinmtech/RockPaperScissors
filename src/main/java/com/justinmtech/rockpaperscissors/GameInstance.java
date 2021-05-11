@@ -3,7 +3,6 @@ package com.justinmtech.rockpaperscissors;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 //The logic for an RPS match
 public class GameInstance {
@@ -32,6 +31,9 @@ public class GameInstance {
 
     private SendMessage sendMessage;
 
+    //Max time in seconds between each round
+    //private int maxRoundTime;
+
     //Construct a game instance with Main class, the two players and a bet
     public GameInstance(RockPaperScissors plugin, Player player1, Player player2, int bet) {
         this.plugin = plugin;
@@ -40,7 +42,13 @@ public class GameInstance {
         this.bet = bet;
         this.player1 = player1;
         this.player2 = player2;
+
+        //Set score to win from config
         scoreToWin = plugin.getConfig().getInt("game-settings.scoreToWin");
+
+        //Set max round time from config
+        //maxRoundTime = plugin.getConfig().getInt("game-settings.maxRoundTime");
+
         sendMessage.gameStarting(player1, player2);
         displayInstructions();
     }
@@ -48,51 +56,6 @@ public class GameInstance {
     //Show the players what to do after a game starts
     public void displayInstructions() {
         sendMessage.gameInstructions(player1, player2);
-        //start timer
-        //doTimer();
-    }
-
-    private void doTimer() {
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, () -> {
-            checkIfInputIsNull();
-            determineWinner();
-        }, 140);
-    }
-
-    private void giveRandomMove(int player) {
-        int min = 1;
-        int max = 3;
-        int randomNumber = (int)Math.floor(Math.random()*(min - max + 1) + min);
-
-        if (randomNumber == 1) {
-            if (player == 1) {
-                setPlayerInput(this.player1, "rock");
-            } else {
-                setPlayerInput(this.player2, "rock");
-            }
-        } else if (randomNumber == 2) {
-            if (player == 1) {
-                setPlayerInput(this.player1, "paper");
-            } else {
-                setPlayerInput(this.player2, "paper");
-            }
-        } else {
-            if (player == 1) {
-            setPlayerInput(this.player1, "scissors");
-            } else {
-                setPlayerInput(this.player2, "scissors");
-            }
-        }
-    }
-
-    private void checkIfInputIsNull() {
-        int player = 0;
-        if (player1Input == null) {
-            giveRandomMove(1);
-        } else if (player2Input == null) {
-            giveRandomMove(2);
-        }
     }
 
     //Check if the game is over yet
@@ -112,7 +75,7 @@ public class GameInstance {
     //Determine round winner and increment scores
     public void determineWinner() {
         if (player1Input == player2Input) {
-            sendMessage.matchTie(player1, player2);
+            sendMessage.roundTie(player1, player2);
         } else if (player1Input.equalsIgnoreCase("paper")) {
             if (player2Input.equalsIgnoreCase("rock")) {
                 player1Score++;
@@ -174,7 +137,7 @@ public class GameInstance {
         }
 
         //Remove active invite
-        plugin.consumeInvite(player2, player1);
+        //plugin.consumeInvite(player2, player1);
     }
 
     //Pay the bet to the winner (original bet x2)

@@ -59,21 +59,19 @@ public class CommandHandler implements CommandExecutor {
             if (plugin.getGame(player) != null) {
                 if (command.getName().equalsIgnoreCase("rock")) {
                     plugin.getGame(player).setPlayerInput(player, "rock");
-                    //SendMessage.choseRock(player);
                     sendMessage.choseRock(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("paper")) {
                     plugin.getGame(player).setPlayerInput(player, "paper");
-                    //SendMessage.chosePaper(player);
                     sendMessage.chosePaper(player);
                 }
 
                 if (command.getName().equalsIgnoreCase("scissors")) {
                     plugin.getGame(player).setPlayerInput(player, "scissors");
-                    //SendMessage.choseScissors(player);
                     sendMessage.choseScissors(player);
                 }
+
                 if (plugin.getGame(player).haveBothPlayersChosenMove()) {
                     plugin.getGame(player).determineWinner();
                     plugin.getGame(player).resetInputs();

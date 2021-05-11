@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 //Main plugin class
-//TODO Add configurable time limit for each rps round
 public final class RockPaperScissors extends JavaPlugin {
 
     private static final Logger log = Logger.getLogger("Minecraft");
@@ -99,9 +98,6 @@ public final class RockPaperScissors extends JavaPlugin {
         boolean invited = false;
         try {
             ArrayList invitesSent = invites.get(player2);
-            System.out.println(invitesSent.size());
-            System.out.println(invitesSent.get(0));
-            System.out.println(invitesSent.get(1));
 
             if (invitesSent.size() < 1) {
                 throw new NullPointerException();

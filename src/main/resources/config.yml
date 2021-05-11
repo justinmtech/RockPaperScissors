@@ -2,6 +2,7 @@ game-settings:
   minBet: 100
   scoreToWin: 3
   broadcastMatchMinBet: 1000
+  maxRoundTime: 10
 
 messages:
   choseRock: "&cYou chose rock!"
@@ -19,13 +20,13 @@ messages:
   minimumBet: "&cThe minimum bet is %b!"
   playerNotFound: "&cPlayer not found!"
   gameInstructions: "&6Type /rock, /paper or /scissors!"
-  matchTie: "&eTie!"
-  roundEndWin: "&aRound win!"
-  roundEndLose: "&cRound lose!"
+  roundEndWin: "&a&lRound win!"
+  roundEndLose: "&c&lRound lose!"
+  roundTie: "&e&lRound tie!"
   roundResults: "&b%p: %s"
-  matchResultsWin: "&aYou won!"
+  matchResultsWin: "&a&lYou won!"
   matchResultsWinWithBet: "&aYou won! [Bet: +$%b]"
-  matchResultsLose: "&cYou lost!"
+  matchResultsLose: "&c&lYou lost!"
   matchResultsLoseWithBet: "&cYou lost! [Bet: -$%b]"
   gameCancelled: "&cGame cancelled!"
   betReturned: "&cYour bet was returned due to the game being interrupted.."

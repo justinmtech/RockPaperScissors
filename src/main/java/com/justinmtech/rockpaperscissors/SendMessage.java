@@ -89,8 +89,10 @@ public class SendMessage {
                 plugin.getConfig().getString("messages.gameInstructions")));
     }
 
-    public void matchTie(Player player, Player player2) {
-        toBoth(player, player2, plugin.getConfig().getString("messages.Tie"));
+    public void roundTie(Player player, Player player2) {
+        dividerLine(player);
+        dividerLine(player2);
+        toBoth(player, player2, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.roundTie")));
     }
 
     public void dividerLine(Player player) {
